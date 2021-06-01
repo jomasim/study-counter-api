@@ -1,0 +1,7 @@
+runtime: nodejs
+env: flex
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 8
+env_variables:
+  DATABASE_URL: "mongodb+srv://admin:Q3heqRQsYVzp28dH@cluster0.qlkmh.mongodb.net/study-db?retryWrites=true&w=majority"
