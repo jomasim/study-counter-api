@@ -7,7 +7,7 @@ const connectDb = async () => {
 
   if (process.env.GOOGLE_CLOUD_PROJECT) {
     //production database
-    dbUrl = await getSecret(process.env.DATABASE_URL)
+    dbUrl = await getSecret('DATABASE_URL')
   } else {
     //local database
     dbUrl = process.env.DATABASE_URL
