@@ -7,8 +7,14 @@ import questionRouter from './routes/question'
 
 import admin from 'firebase-admin'
 var firebaseMiddleware = require('express-firebase-middleware')
+let serviceAccount
 
-const serviceAccount = require('../perm.json')
+//firebase admin permissions
+if (process.env.GOOGLE_CLOUD_PROJECT) {
+  serviceAccount = process.env.FIREBASE_ADMIN_PERMISSIONS
+} else {
+  serviceAccount = require('../perm.json')
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
