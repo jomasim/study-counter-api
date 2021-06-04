@@ -6,15 +6,20 @@ import { connectDb } from '../src/models/index'
 import questionRouter from './routes/question'
 
 import admin from 'firebase-admin'
+import { getSecret } from './utils/gcp_secrets'
 var firebaseMiddleware = require('express-firebase-middleware')
-
-admin.initializeApp({
-  credential: admin.credential.applicationDefault()
-})
 
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+app.use('/', async (req, res) => {
+  if (process.env.GOOGLE_CLOUD_PROJECT) {
+    const data = await getSecret('FIREBASE_PERMISSIONS')
+    // const params = admin.credential.cert(JSON.parse(data))
+    res.send(data)
+  }
+})
 
 app.use('/api/v1/question', firebaseMiddleware.auth, questionRouter)
 
