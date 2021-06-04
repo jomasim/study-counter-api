@@ -7,3 +7,10 @@ steps:
   - name: node
     entrypoint: yarn
     args: ["run", "start"]
+    secretEnv: ['DATABASE_URL', 'FIREBASE_PERMISSIONS']
+availableSecrets:
+  secretManager:
+  - versionName: projects/studycounter/secrets/DATABASE_URL/versions/latest
+    env: 'DATABASE_URL'
+  - versionName: projects/studycounter/secrets/FIREBASE_PERMISSIONS/versions/latest
+    env: 'FIREBASE_PERMISSIONS'
