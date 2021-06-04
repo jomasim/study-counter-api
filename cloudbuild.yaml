@@ -3,7 +3,7 @@ steps:
   - name: node
     entrypoint: yarn
     args: ["install"]
-  # Run custom commands
+  # Run custom commands here
   - name: node
     entrypoint: yarn
     args: ["run", "start"]
