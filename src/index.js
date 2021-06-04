@@ -13,16 +13,20 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.use('/', async (req, res) => {
-  if (process.env.GOOGLE_CLOUD_PROJECT) {
-    const data = await getSecret('FIREBASE_PERMISSIONS')
-    // const params = admin.credential.cert(JSON.parse(data))
-    res.send(data)
-  }
-})
-
 app.use('/api/v1/question', firebaseMiddleware.auth, questionRouter)
 
 connectDb().then(async () => {
+  let params
+  if (process.env.GOOGLE_CLOUD_PROJECT) {
+    const data = await getSecret(process.env.FIREBASE_PERMISSIONS)
+    params = admin.credential.cert(JSON.parse(data))
+  } else {
+    params = process.env.FIREBASE_PERMISSIONS
+  }
+
+  admin.initializeApp({
+    credential: admin.credential.cert(params)
+  })
+
   app.listen(8080, () => console.log(`app listening on port 8080`))
 })
