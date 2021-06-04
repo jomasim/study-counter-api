@@ -19,7 +19,7 @@ connectDb().then(async () => {
   let params
   if (process.env.GOOGLE_CLOUD_PROJECT) {
     const data = await getSecret(process.env.FIREBASE_PERMISSIONS)
-    params = admin.credential.cert(JSON.parse(data))
+    params = admin.credential.cert(data)
   } else {
     params = process.env.FIREBASE_PERMISSIONS
   }
