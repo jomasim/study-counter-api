@@ -18,7 +18,8 @@ app.use('/api/v1/question', firebaseMiddleware.auth, questionRouter)
 connectDb().then(async () => {
   let params
   if (process.env.GOOGLE_CLOUD_PROJECT) {
-    params = await getSecret(process.env.FIREBASE_PERMISSIONS)
+    const data = await getSecret(process.env.FIREBASE_PERMISSIONS)
+    params = admin.credential.cert(data)
   } else {
     params = process.env.FIREBASE_PERMISSIONS
   }
