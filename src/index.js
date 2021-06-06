@@ -13,31 +13,36 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.use('/', async (req, res) => {
+  const result = await getSecret(process.env.FIREBASE_PERMISSIONS)
+  res.send(result)
+})
+
 app.use('/api/v1/question', firebaseMiddleware.auth, questionRouter)
 
 connectDb().then(async () => {
-  let params
-  if (process.env.GOOGLE_CLOUD_PROJECT) {
-    const result = await getSecret(process.env.FIREBASE_PERMISSIONS)
-    params = {
-      type: result.type,
-      projectId: result.project_id,
-      privateKeyId: result.private_key_id,
-      privateKey: result.private_key,
-      clientEmail: result.client_email,
-      clientId: result.client_id,
-      authUri: result.auth_uri,
-      tokenUri: result.token_uri,
-      authProviderX509CertUrl: result.auth_provider_x509_cert_url,
-      clientC509CertUrl: result.client_x509_cert_url
-    }
-  } else {
-    params = process.env.FIREBASE_PERMISSIONS
-  }
+  // let params
+  // if (process.env.GOOGLE_CLOUD_PROJECT) {
+  //   const result = await getSecret(process.env.FIREBASE_PERMISSIONS)
+  //   params = {
+  //     type: result.type,
+  //     projectId: result.project_id,
+  //     privateKeyId: result.private_key_id,
+  //     privateKey: result.private_key,
+  //     clientEmail: result.client_email,
+  //     clientId: result.client_id,
+  //     authUri: result.auth_uri,
+  //     tokenUri: result.token_uri,
+  //     authProviderX509CertUrl: result.auth_provider_x509_cert_url,
+  //     clientC509CertUrl: result.client_x509_cert_url
+  //   }
+  // } else {
+  //   params = process.env.FIREBASE_PERMISSIONS
+  // }
 
-  admin.initializeApp({
-    credential: admin.credential.cert(params)
-  })
+  // admin.initializeApp({
+  //   credential: admin.credential.cert(params)
+  // })
 
   app.listen(8080, () => console.log(`app listening on port 8080`))
 })
