@@ -3,10 +3,6 @@ steps:
   - name: node
     entrypoint: yarn
     args: ["install"]
-  # Run custom commands here
-  - name: node
-    entrypoint: yarn
-    args: ["run", "start"]
     secretEnv: ['DATABASE_URL', 'FIREBASE_PERMISSIONS']
 availableSecrets:
   secretManager:
