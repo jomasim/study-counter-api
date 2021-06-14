@@ -13,11 +13,6 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.use('/', async (req, res) => {
-  const result = await getSecret(process.env.FIREBASE_PERMISSIONS)
-  res.send(result)
-})
-
 app.use('/api/v1/question', firebaseMiddleware.auth, questionRouter)
 
 connectDb().then(async () => {
