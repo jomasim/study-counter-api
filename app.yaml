@@ -2,7 +2,7 @@ runtime: nodejs
 env: flex
 automatic_scaling:
   min_num_instances: 1
-  max_num_instances: 8
+  max_num_instances: 2
 env_variables:
   DATABASE_URL: "DATABASE_URL"
   FIREBASE_PERMISSIONS: "FIREBASE_PERMISSIONS"
