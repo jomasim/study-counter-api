@@ -25,6 +25,13 @@ const schemas = {
       .messages({
         'string.empty': 'course code should not be empty',
         'any.required': 'course code is required'
+      }),
+    tags: Joi.array(),
+    deadline: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'deadline should not be empty',
+        'any.required': 'deadline is required'
       })
   })
 }

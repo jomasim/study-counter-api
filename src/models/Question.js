@@ -23,6 +23,13 @@ const questionSchema = new mongoose.Schema(
     course_code: {
       type: String,
       required: true
+    },
+    tags: {
+      type: Array
+    },
+    deadline: {
+      type: String,
+      required: true
     }
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
