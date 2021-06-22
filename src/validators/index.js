@@ -27,6 +27,7 @@ const schemas = {
         'any.required': 'course code is required'
       }),
     tags: Joi.array(),
+    files: Joi.array(),
     deadline: Joi.string()
       .required()
       .messages({

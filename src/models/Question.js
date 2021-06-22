@@ -27,6 +27,9 @@ const questionSchema = new mongoose.Schema(
     tags: {
       type: Array
     },
+    files: {
+      type: Array
+    },
     deadline: {
       type: String,
       required: true

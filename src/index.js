@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
+import morgan from 'morgan'
 import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
@@ -10,6 +11,7 @@ import { getSecret } from './utils/gcp_secrets'
 var firebaseMiddleware = require('express-firebase-middleware')
 
 const app = express()
+app.use(morgan('combined'))
 app.use(cors())
 app.use(express.json())
 
