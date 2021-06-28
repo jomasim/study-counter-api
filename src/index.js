@@ -8,14 +8,13 @@ import questionRouter from './routes/question'
 
 import admin from 'firebase-admin'
 import { getSecret } from './utils/gcp_secrets'
-var firebaseMiddleware = require('express-firebase-middleware')
 
 const app = express()
 app.use(morgan('combined'))
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/v1/question', firebaseMiddleware.auth, questionRouter)
+app.use('/api/v1/question', questionRouter)
 
 connectDb().then(async () => {
   let params

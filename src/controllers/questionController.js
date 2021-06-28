@@ -2,7 +2,7 @@ import Question from '../models/Question'
 
 export default {
   list: async (req, res) => {
-    const questions = await Question.find({})
+    const questions = await Question.find({}, null, { sort: { created_at: -1 } })
     return res.status(200).json(questions)
   },
   add: (req, res) => {
