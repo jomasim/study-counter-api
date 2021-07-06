@@ -7,9 +7,9 @@ export default {
     })
     return res.status(200).json(questions)
   },
-  getByName: async (req, res) => {
-    const { title } = req.params
-    const data = await Question.findOne({ title })
+  getById: async (req, res) => {
+    const { id } = req.params
+    const data = await Question.findOne({ _id: id })
     return res.status(200).json(data)
   },
   add: (req, res) => {
