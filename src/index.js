@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
+import userRouter from './routes/user'
 
 import admin from 'firebase-admin'
 import { getSecret } from './utils/gcp_secrets'
@@ -15,6 +16,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api/v1/question', questionRouter)
+app.use('/api/v1/user', userRouter)
 
 connectDb().then(async () => {
   let params

@@ -2,9 +2,24 @@ import Question from '../models/Question'
 
 export default {
   list: async (req, res) => {
+    const { author } = req.params
     const questions = await Question.find({}, null, {
       sort: { created_at: -1 }
     })
+
+    return res.status(200).json(questions)
+  },
+  listByAuthor: async (req, res) => {
+    const author = res.locals.user.user_id
+    let questions = []
+    if (author) {
+      questions = await Question.find({}, null, {
+        sort: { created_at: -1 }
+      })
+        .where('author')
+        .equals(author)
+    }
+
     return res.status(200).json(questions)
   },
   getById: async (req, res) => {
