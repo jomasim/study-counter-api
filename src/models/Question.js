@@ -33,6 +33,14 @@ const questionSchema = new mongoose.Schema(
     deadline: {
       type: String,
       required: true
+    },
+    status: {
+      type: String,
+      default: 'available'
+    },
+    answers: {
+      type: Array,
+      default: []
     }
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
