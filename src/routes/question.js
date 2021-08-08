@@ -16,5 +16,10 @@ questionRouter.post(
   validate.question,
   (req, res) => questionController.add(req, res)
 )
-
+questionRouter.post(
+  '/update/:id',
+  firebaseMiddleware.auth,
+  validate.answer,
+  (req, res) => questionController.answer(req, res)
+)
 export default questionRouter

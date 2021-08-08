@@ -34,12 +34,26 @@ const schemas = {
         'string.empty': 'deadline should not be empty',
         'any.required': 'deadline is required'
       })
+  }),
+  answerSchema: Joi.object().keys({
+    answer: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'body should not be empty',
+        'any.required': 'body is required'
+      })
   })
 }
 
 export default {
   question: (req, res, next) => {
     const { error } = schemas.question.validate(req.body)
+    if (error)
+      return res.status(400).json({ message: error.details[0].message })
+    next()
+  },
+  answer: (req, res, next) => {
+    const { error } = schemas.answerSchema.validate(req.body)
     if (error)
       return res.status(400).json({ message: error.details[0].message })
     next()

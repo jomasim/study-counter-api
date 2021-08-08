@@ -2,7 +2,6 @@ import Question from '../models/Question'
 
 export default {
   list: async (req, res) => {
-    const { author } = req.params
     const questions = await Question.find({}, null, {
       sort: { created_at: -1 }
     })
@@ -38,5 +37,20 @@ export default {
       .catch(err =>
         res.status(500).json({ message: 'Error occured while saving', err })
       )
+  },
+  answer: async (req, res) => {
+    const { id } = req.params
+    const data = req.body.answer || ''
+    Question.findByIdAndUpdate(
+      id,
+      { $push: { answers: data } },
+      { upsert: true },
+      (err, doc) => {
+        if (err) return res.send(500, { message: err })
+        return res
+          .status(200)
+          .send({ message: 'Succesfully saved.', data: doc })
+      }
+    )
   }
 }
