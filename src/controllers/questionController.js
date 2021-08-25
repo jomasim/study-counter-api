@@ -2,11 +2,20 @@ import Question from '../models/Question'
 
 export default {
   list: async (req, res) => {
+    const { limit = 10, page = 1 } = req.query
     const questions = await Question.find({}, null, {
-      sort: { created_at: -1 }
+      sort: { created_at: -1 },
+      limit: parseInt(limit),
+      skip: (parseInt(page) - 1) * parseInt(limit)
     })
-
-    return res.status(200).json(questions)
+    const questionData = {
+      page,
+      nextPage: page + 1,
+      prevPage: page - 1 > 0 ? page - 1 : null,
+      count: questions.length,
+      questions
+    }
+    return res.status(200).json(questionData)
   },
   listByAuthor: async (req, res) => {
     const author = res.locals.user.user_id
@@ -27,6 +36,7 @@ export default {
     return res.status(200).json(data)
   },
   add: (req, res) => {
+    0
     const author = res.locals.user.user_id
     const data = req.body
     data.author = author
