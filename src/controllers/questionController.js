@@ -3,6 +3,7 @@ import Question from '../models/Question'
 export default {
   list: async (req, res) => {
     const { limit = 10, page = 1 } = req.query
+    const total = (await Question.countDocuments()) || 0
     const questions = await Question.find({}, null, {
       sort: { created_at: -1 },
       limit: parseInt(limit),
@@ -12,7 +13,7 @@ export default {
       page,
       nextPage: page + 1,
       prevPage: page - 1 > 0 ? page - 1 : null,
-      count: questions.length,
+      count: Math.ceil(total / limit),
       questions
     }
     return res.status(200).json(questionData)
