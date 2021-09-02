@@ -42,10 +42,24 @@ const schemas = {
         'string.empty': 'body should not be empty',
         'any.required': 'body is required'
       })
+  }),
+  fieldSchema: Joi.object().keys({
+    title: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'title should not be empty',
+        'any.required': 'title is required'
+      })
   })
 }
 
 export default {
+  field: (req, res, next) => {
+    const { error } = schemas.fieldSchema.validate(req.body)
+    if (error)
+      return res.status(400).json({ message: error.details[0].message })
+    next()
+  },
   question: (req, res, next) => {
     const { error } = schemas.question.validate(req.body)
     if (error)

@@ -37,7 +37,6 @@ export default {
     return res.status(200).json(data)
   },
   add: (req, res) => {
-    0
     const author = res.locals.user.user_id
     const data = req.body
     data.author = author

@@ -6,9 +6,11 @@ import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
 import userRouter from './routes/user'
+import fieldRouter from './routes/field'
 
 import admin from 'firebase-admin'
 import { getSecret } from './utils/gcp_secrets'
+
 
 const app = express()
 app.use(morgan('combined'))
@@ -17,6 +19,7 @@ app.use(express.json())
 
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/user', userRouter)
+app.use('/api/v1/field', fieldRouter)
 
 connectDb().then(async () => {
   let params
