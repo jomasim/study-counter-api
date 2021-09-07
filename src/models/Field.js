@@ -4,7 +4,8 @@ const fieldSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     }
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }

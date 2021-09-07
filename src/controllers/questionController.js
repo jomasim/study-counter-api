@@ -1,3 +1,4 @@
+import Field from '../models/Field'
 import Question from '../models/Question'
 
 export default {
@@ -40,6 +41,14 @@ export default {
     const author = res.locals.user.user_id
     const data = req.body
     data.author = author
+
+    // validate subject
+    const field = Field.findOne({ _id: data.subject_code })
+
+    if (!field) {
+      res.send(400).json({ message: 'field does not exist' })
+    }
+
     const question = new Question(data)
     question
       .save(data)
