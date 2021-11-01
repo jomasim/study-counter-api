@@ -10,12 +10,25 @@ import fieldRouter from './routes/field'
 
 import admin from 'firebase-admin'
 import { getSecret } from './utils/gcp_secrets'
-
+import Question from './models/Question'
+import slugify from 'slugify'
 
 const app = express()
 app.use(morgan('combined'))
 app.use(cors())
 app.use(express.json())
+
+app.use('/update/slugs', async (req, res) => {
+  const questions = await Question.find({})
+  try {
+    questions.forEach(async question => {
+      await question.update({ slug: slugify(question.title) }, { upsert: true })
+    })
+    return res.send('success')
+  } catch (error) {
+    return res.send().json(error)
+  }
+})
 
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/user', userRouter)

@@ -20,6 +20,11 @@ const questionSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    slug:{
+      type: String,
+      required: true,
+      unique: true
+    },
     course_code: {
       type: String,
       required: true

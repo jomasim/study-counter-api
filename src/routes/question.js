@@ -9,7 +9,7 @@ questionRouter.get('/', (req, res) => questionController.list(req, res))
 questionRouter.get('/owner', firebaseMiddleware.auth, (req, res) =>
   questionController.listByAuthor(req, res)
 )
-questionRouter.get('/:id', (req, res) => questionController.getById(req, res))
+questionRouter.get('/:slug', (req, res) => questionController.getBySlug(req, res))
 questionRouter.post(
   '/',
   firebaseMiddleware.auth,

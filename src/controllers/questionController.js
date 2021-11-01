@@ -1,3 +1,4 @@
+import slugify from 'slugify'
 import Field from '../models/Field'
 import Question from '../models/Question'
 
@@ -10,6 +11,7 @@ export default {
       limit: parseInt(limit),
       skip: (parseInt(page) - 1) * parseInt(limit)
     })
+
     const questionData = {
       page,
       nextPage: page + 1,
@@ -29,18 +31,19 @@ export default {
         .where('author')
         .equals(author)
     }
-
     return res.status(200).json(questions)
   },
-  getById: async (req, res) => {
-    const { id } = req.params
-    const data = await Question.findOne({ _id: id })
+  getBySlug: async (req, res) => {
+    const { slug } = req.params
+    const data = await Question.findOne({ slug })
     return res.status(200).json(data)
   },
   add: (req, res) => {
     const author = res.locals.user.user_id
     const data = req.body
     data.author = author
+    // append slug
+    data.slug = slugify(data.title)
 
     // validate subject
     const field = Field.findOne({ _id: data.subject_code })
