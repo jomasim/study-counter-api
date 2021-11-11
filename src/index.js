@@ -35,6 +35,26 @@ app.use('/update/slugs', async (req, res) => {
   }
 })
 
+app.use('/update/dates', async (req, res) => {
+  const questions = await Question.find({})
+  try {
+    questions.forEach(async question => {
+      if (!question.created_at || !question.updated_at) {
+        await question.update(
+          {
+            created_at: '2021-11-01T06:22:32.374+00:00',
+            updated_at: '2021-11-01T06:22:32.374+00:00'
+          },
+          { upsert: true }
+        )
+      }
+    })
+    return res.send('success')
+  } catch (error) {
+    return res.send().json(error)
+  }
+})
+
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/field', fieldRouter)
