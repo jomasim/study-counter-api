@@ -22,7 +22,12 @@ app.use('/update/slugs', async (req, res) => {
   const questions = await Question.find({})
   try {
     questions.forEach(async question => {
-      await question.update({ slug: slugify(question.title) }, { upsert: true })
+      if (!question.slug) {
+        await question.update(
+          { slug: slugify(question.title) },
+          { upsert: true }
+        )
+      }
     })
     return res.send('success')
   } catch (error) {
