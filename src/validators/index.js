@@ -1,6 +1,13 @@
 import Joi from '@hapi/joi'
 const schemas = {
   question: Joi.object().keys({
+    questionType: Joi.string()
+      .required()
+      .messages({
+        'string.base': 'invalid type, title should be a string',
+        'string.empty': 'please select question type',
+        'any.required': 'question type is required'
+      }),
     title: Joi.string()
       .required()
       .messages({
@@ -14,6 +21,11 @@ const schemas = {
         'string.empty': 'body should not be empty',
         'any.required': 'body is required'
       }),
+    paperInfo: Joi.object().keys({
+      spacing: Joi.string(),
+      format: Joi.string(),
+      pages: Joi.number()
+    }),
     subject_code: Joi.string()
       .required()
       .messages({

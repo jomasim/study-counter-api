@@ -2,11 +2,14 @@ import mongoose from 'mongoose'
 
 const questionSchema = new mongoose.Schema(
   {
+    questionType: {
+      type: String,
+      required: true
+    },
     title: {
       type: String,
       required: true
     },
-
     author: {
       type: String,
       required: true
@@ -16,11 +19,14 @@ const questionSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    paperInfo: {
+      type: Object
+    },
     subject_code: {
       type: String,
       required: true
     },
-    slug:{
+    slug: {
       type: String,
       required: true,
       unique: true
