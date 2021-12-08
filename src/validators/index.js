@@ -21,11 +21,7 @@ const schemas = {
         'string.empty': 'body should not be empty',
         'any.required': 'body is required'
       }),
-    paperInfo: Joi.object().keys({
-      spacing: Joi.string(),
-      format: Joi.string(),
-      pages: Joi.number()
-    }),
+  
     subject_code: Joi.string()
       .required()
       .messages({
