@@ -22,9 +22,9 @@ const schemas = {
         'any.required': 'body is required'
       }),
     paperInfo: Joi.object().keys({
-      spacing: Joi.string(),
-      format: Joi.string(),
-      pages: Joi.number()
+      spacing: Joi.string().allow(''),
+      format: Joi.string().allow(''),
+      pages: Joi.number().allow('')
     }),
     subject_code: Joi.string()
       .required()
