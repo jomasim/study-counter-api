@@ -10,7 +10,7 @@ export default {
       sort: { created_at: -1 },
       limit: parseInt(limit),
       skip: (parseInt(page) - 1) * parseInt(limit)
-    })
+    }).populate("subject_code")
 
     const questionData = {
       page,
