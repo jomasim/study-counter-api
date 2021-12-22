@@ -23,8 +23,8 @@ const questionSchema = new mongoose.Schema(
       type: Object
     },
     subject_code: {
-      type: String,
-      required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Field'
     },
     slug: {
       type: String,
