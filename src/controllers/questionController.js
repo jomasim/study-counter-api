@@ -29,7 +29,7 @@ export default {
         sort: { created_at: -1 }
       })
         .where('author')
-        .equals(author)
+        .equals(author).populate("subject_code")
     }
     return res.status(200).json(questions)
   },
