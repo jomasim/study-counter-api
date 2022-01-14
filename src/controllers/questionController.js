@@ -10,7 +10,7 @@ export default {
       sort: { created_at: -1 },
       limit: parseInt(limit),
       skip: (parseInt(page) - 1) * parseInt(limit)
-    }).populate("subject_code")
+    }).populate('subject_code')
 
     const questionData = {
       page,
@@ -22,20 +22,31 @@ export default {
     return res.status(200).json(questionData)
   },
   listByAuthor: async (req, res) => {
+    const { limit = 10, page = 1 } = req.query
     const author = res.locals.user.user_id
+    const total = (await Question.countDocuments({ author })) || 0
     let questions = []
     if (author) {
       questions = await Question.find({}, null, {
-        sort: { created_at: -1 }
+        sort: { created_at: -1 },
+        limit: parseInt(limit),
+        skip: (parseInt(page) - 1) * parseInt(limit)
       })
         .where('author')
-        .equals(author).populate("subject_code")
+        .equals(author)
+        .populate('subject_code')
     }
-    return res.status(200).json(questions)
+    return res.status(200).json({
+      page,
+      nextPage: page + 1,
+      prevPage: page - 1 > 0 ? page - 1 : null,
+      count: Math.ceil(total / limit),
+      questions
+    })
   },
   getBySlug: async (req, res) => {
     const { slug } = req.params
-    const data = await Question.findOne({ slug }).populate("subject_code")
+    const data = await Question.findOne({ slug }).populate('subject_code')
     return res.status(200).json(data)
   },
   add: (req, res) => {
