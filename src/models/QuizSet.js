@@ -4,17 +4,12 @@ const quizSetSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
-      unique: true
-    }
-  },
-  {
+      required: true
+    },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Field'
-    }
-  },
-  {
+    },
     questions: [
       {
         type: mongoose.Schema.Types.ObjectId,

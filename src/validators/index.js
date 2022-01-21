@@ -62,6 +62,38 @@ const schemas = {
         'string.empty': 'title should not be empty',
         'any.required': 'title is required'
       })
+  }),
+  quizSetSchema: Joi.object().keys({
+    quizSetTitle: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'quizset title should not be empty',
+        'any.required': 'quizset title is required'
+      }),
+    subject: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'subject should not be empty',
+        'any.required': 'subject is required'
+      }),
+    questions: Joi.array()
+      .items({
+        questionTitle: Joi.string()
+          .required()
+          .messages({
+            'string.empty': 'question title should not be empty',
+            'any.required': 'question title is required'
+          }),
+        options: Joi.array().min(2).required(),
+        answer: Joi.string()
+          .required()
+          .messages({
+            'string.empty': 'answer should not be empty',
+            'any.required': 'answer is required'
+          })
+      })
+      .min(1)
+      .required()
   })
 }
 
@@ -74,6 +106,12 @@ export default {
   },
   question: (req, res, next) => {
     const { error } = schemas.question.validate(req.body)
+    if (error)
+      return res.status(400).json({ message: error.details[0].message })
+    next()
+  },
+  quizSet: (req, res, next) => {
+    const { error } = schemas.quizSetSchema.validate(req.body)
     if (error)
       return res.status(400).json({ message: error.details[0].message })
     next()

@@ -12,6 +12,7 @@ import admin from 'firebase-admin'
 import { getSecret } from './utils/gcp_secrets'
 import Question from './models/Question'
 import slugify from 'slugify'
+import quizSetRouter from './routes/quizSet'
 
 const app = express()
 app.use(morgan('combined'))
@@ -53,6 +54,7 @@ app.use('/update/dates', async (req, res) => {
   }
 })
 
+app.use('/api/v1/quizset', quizSetRouter)
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/field', fieldRouter)
