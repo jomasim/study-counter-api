@@ -13,6 +13,10 @@ const connectDb = async () => {
     dbUrl = process.env.DATABASE_URL
   }
 
+  mongoose.set('useNewUrlParser', true)
+  mongoose.set('useFindAndModify', false)
+  mongoose.set('useCreateIndex', true)
+
   return mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
