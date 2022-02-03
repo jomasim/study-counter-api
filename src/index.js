@@ -13,6 +13,8 @@ import { getSecret } from './utils/gcp_secrets'
 import Question from './models/Question'
 import slugify from 'slugify'
 import quizSetRouter from './routes/quizSet'
+import QuizSet from './models/QuizSet'
+import ShortUniqueId from 'short-unique-id'
 
 const app = express()
 app.use(morgan('combined'))
@@ -29,6 +31,25 @@ app.use('/update/slugs', async (req, res) => {
           { upsert: true }
         )
       }
+    })
+    return res.send('success')
+  } catch (error) {
+    return res.send().json(error)
+  }
+})
+
+app.use('/update/short', async (req, res) => {
+  const uid = new ShortUniqueId({ length: 10 })
+  const sets = await QuizSet.find({})
+  try {
+    sets.forEach(async set => {
+      await set.update(
+        {
+          slug: slugify(set.title),
+          shortCode: uid()
+        },
+        { upsert: true }
+      )
     })
     return res.send('success')
   } catch (error) {

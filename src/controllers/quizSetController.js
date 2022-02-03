@@ -1,3 +1,5 @@
+import slugify from 'slugify'
+import ShortUniqueId from 'short-unique-id'
 import QuizItem from '../models/QuizItem'
 import QuizSet from '../models/QuizSet'
 
@@ -14,11 +16,13 @@ export default {
         await quizItem.save()
         quizes.push(quizItem._id)
       }
-
+      const uid = new ShortUniqueId({ length: 10 })
       const quizSet = new QuizSet({
         title: quizSetTitle,
         subject,
-        questions: quizes
+        questions: quizes,
+        slug: slugify(quizSetTitle),
+        shortCode: uid()
       })
       const doc = await quizSet.save()
       res.status(201).json(doc)
@@ -26,10 +30,30 @@ export default {
       res.status(500).json({ message: 'Error occured while saving', error })
     }
   },
-  list: async (req, res) => {
-    const quizSets = await QuizSet.find({})
+  getByShortCode: async (req, res) => {
+    const { short_code } = req.params
+    const data = await QuizSet.findOne({ shortCode: short_code })
       .populate('subject')
       .populate('questions')
-    return res.status(200).json(quizSets)
+    return res.status(200).json(data)
+  },
+  list: async (req, res) => {
+    const { limit = 10, page = 1 } = req.query
+    const total = (await QuizSet.countDocuments()) || 0
+    const quizSets = await QuizSet.find({}, null, {
+      sort: { created_at: -1 },
+      limit: parseInt(limit),
+      skip: (parseInt(page) - 1) * parseInt(limit)
+    })
+      .populate('subject')
+      .populate('questions')
+    const quizSetsData = {
+      page,
+      nextPage: page + 1,
+      prevPage: page - 1 > 0 ? page - 1 : null,
+      count: Math.ceil(total / limit),
+      quizSets
+    }
+    return res.status(200).json(quizSetsData)
   }
 }

@@ -24,6 +24,7 @@
         "mongoose-slug-generator": "^1.0.4",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.7",
+        "short-unique-id": "^4.4.4",
         "slugify": "^1.6.1"
     }
 }

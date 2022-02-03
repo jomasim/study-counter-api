@@ -10,6 +10,14 @@ const quizSetSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Field'
     },
+    shortCode: {
+      type: String,
+      required: true
+    },
+    slug: {
+      type: String,
+      required: true
+    },
     questions: [
       {
         type: mongoose.Schema.Types.ObjectId,
