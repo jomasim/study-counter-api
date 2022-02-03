@@ -5,14 +5,10 @@ const quizItemSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true
-    }
-  },
-  {
+    },
     options: {
       type: Array
-    }
-  },
-  {
+    },
     answer: {
       type: String,
       required: true
