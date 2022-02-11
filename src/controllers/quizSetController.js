@@ -6,7 +6,14 @@ import QuizSet from '../models/QuizSet'
 export default {
   add: async (req, res) => {
     try {
-      const { quizSetTitle, subject, questions } = req.body
+      const {
+        quizSetTitle,
+        subject,
+        questions,
+        custom = false,
+        meta,
+        image
+      } = req.body
 
       let quizes = []
       for (let question of questions) {
@@ -20,6 +27,9 @@ export default {
       const quizSet = new QuizSet({
         title: quizSetTitle,
         subject,
+        image,
+        custom,
+        meta,
         questions: quizes,
         slug: slugify(quizSetTitle),
         shortCode: uid()

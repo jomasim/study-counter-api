@@ -14,6 +14,16 @@ const quizSetSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    custom: {
+      type: Boolean,
+      default: false
+    },
+    image: {
+      type: String
+    },
+    meta: {
+      type: Object
+    },
     slug: {
       type: String,
       required: true

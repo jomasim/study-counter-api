@@ -70,6 +70,9 @@ const schemas = {
         'string.empty': 'quizset title should not be empty',
         'any.required': 'quizset title is required'
       }),
+    image: Joi.string(),
+    custom: Joi.boolean(),
+    meta: Joi.object(),
     subject: Joi.string()
       .required()
       .messages({
@@ -84,7 +87,7 @@ const schemas = {
             'string.empty': 'question title should not be empty',
             'any.required': 'question title is required'
           }),
-        options: Joi.array().min(2).required(),
+        options: Joi.array(),
         answer: Joi.string()
           .required()
           .messages({
