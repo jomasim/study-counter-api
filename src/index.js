@@ -121,7 +121,6 @@ app.use('/upload/sets', async (req, res, next) => {
     }
     return app._router.handle(req, res, next)
   } catch (error) {
-    console.log('home', error)
     return res.status(400).send('unknown happened')
   }
 })
