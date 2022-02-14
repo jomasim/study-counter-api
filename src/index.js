@@ -2,6 +2,9 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
+const fileUpload = require('express-fileupload')
+const csv = require('csvtojson')
+const { htmlToText } = require('html-to-text')
 import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
@@ -17,9 +20,15 @@ import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
 
 const app = express()
-app.use(morgan('combined'))
+app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
+// enable files upload
+app.use(
+  fileUpload({
+    createParentPath: true
+  })
+)
 
 app.use('/update/slugs', async (req, res) => {
   const questions = await Question.find({})
@@ -72,6 +81,48 @@ app.use('/update/dates', async (req, res) => {
     return res.send('success')
   } catch (error) {
     return res.send().json(error)
+  }
+})
+
+app.use('/upload/sets', async (req, res, next) => {
+  try {
+    if (!req.files) {
+      return res.status(400).send('No file uploaded')
+    }
+    if (!req.files.file) {
+      return res.status(400).send('File name with key file is missing')
+    }
+    const jsonArray = await csv().fromString(
+      req.files.file.data.toString('utf8')
+    )
+
+    const single = jsonArray[0]
+    const quizSetTitle = single['title']
+    const subject = single['subject']
+    const meta = { category: single['category'] }
+    const image = single['image']
+
+    const questions = jsonArray.map(item => {
+      return {
+        questionTitle: htmlToText(item.question),
+        answer: htmlToText(item.answer)
+      }
+    })
+
+    req.url = '/api/v1/quizset'
+    req.method = 'post'
+    req.body = {
+      quizSetTitle,
+      subject,
+      meta,
+      image,
+      custom: true,
+      questions
+    }
+    return app._router.handle(req, res, next)
+  } catch (error) {
+    console.log('home', error)
+    return res.status(400).send('unknown happened')
   }
 })
 

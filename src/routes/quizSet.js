@@ -9,7 +9,7 @@ quizSetRouter.get('/', (req, res) => quizSetController.list(req, res))
 quizSetRouter.get('/:short_code', (req, res) =>
   quizSetController.getByShortCode(req, res)
 )
-quizSetRouter.post('/', firebaseMiddleware.auth, validate.quizSet, (req, res) =>
+quizSetRouter.post('/', validate.quizSet, (req, res) =>
   quizSetController.add(req, res)
 )
 
