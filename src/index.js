@@ -100,12 +100,12 @@ app.use('/upload/sets', async (req, res, next) => {
     const quizSetTitle = single['title']
     const subject = single['subject']
     const meta = { category: single['category'] }
-    const image = single['image']
 
     const questions = jsonArray.map(item => {
       return {
         questionTitle: htmlToText(item.question),
-        answer: htmlToText(item.answer)
+        answer: htmlToText(item.answer),
+        image: item.image
       }
     })
 
@@ -115,7 +115,6 @@ app.use('/upload/sets', async (req, res, next) => {
       quizSetTitle,
       subject,
       meta,
-      image,
       custom: true,
       questions
     }

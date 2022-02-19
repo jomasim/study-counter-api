@@ -11,15 +11,19 @@ export default {
         subject,
         questions,
         custom = false,
-        meta,
-        image
+        meta
       } = req.body
 
       let quizes = []
       for (let question of questions) {
         // create single quiz item
-        const { questionTitle, options, answer } = question
-        const quizItem = new QuizItem({ title: questionTitle, options, answer })
+        const { questionTitle, options, answer, image } = question
+        const quizItem = new QuizItem({
+          title: questionTitle,
+          options,
+          answer,
+          image
+        })
         await quizItem.save()
         quizes.push(quizItem._id)
       }
@@ -27,7 +31,6 @@ export default {
       const quizSet = new QuizSet({
         title: quizSetTitle,
         subject,
-        image,
         custom,
         meta,
         questions: quizes,

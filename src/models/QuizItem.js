@@ -12,6 +12,9 @@ const quizItemSchema = new mongoose.Schema(
     answer: {
       type: String,
       required: true
+    },
+    image: {
+      type: String
     }
   },
 

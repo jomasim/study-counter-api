@@ -18,9 +18,6 @@ const quizSetSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    image: {
-      type: String
-    },
     meta: {
       type: Object
     },
