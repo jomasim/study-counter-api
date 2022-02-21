@@ -103,8 +103,8 @@ app.use('/upload/sets', async (req, res, next) => {
 
     const questions = jsonArray.map(item => {
       return {
-        questionTitle: htmlToText(item.question),
-        answer: htmlToText(item.answer),
+        questionTitle: item.question,
+        answer: item.answer,
         image: item.image
       }
     })
