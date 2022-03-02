@@ -4,7 +4,8 @@ import cors from 'cors'
 import morgan from 'morgan'
 const fileUpload = require('express-fileupload')
 const csv = require('csvtojson')
-const { htmlToText } = require('html-to-text')
+import cloudinary from 'cloudinary'
+import validUrl from 'valid-url'
 import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
@@ -18,6 +19,7 @@ import slugify from 'slugify'
 import quizSetRouter from './routes/quizSet'
 import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
+import downloadFile from './utils/downloadFile'
 
 const app = express()
 app.use(morgan('dev'))
@@ -29,6 +31,12 @@ app.use(
     createParentPath: true
   })
 )
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY
+})
 
 app.use('/update/slugs', async (req, res) => {
   const questions = await Question.find({})
@@ -101,6 +109,15 @@ app.use('/upload/sets', async (req, res, next) => {
     const subject = single['subject']
     const meta = { category: single['category'] }
 
+    for (let item of jsonArray) {
+      if (validUrl.isUri(item.image)) {
+        const path = await downloadFile(item.image)
+        const data = await cloudinary.v2.uploader.upload(path)
+        Object.assign(item, { ...item, image: data.secure_url })
+        console.log('uploaded', item.image)
+      }
+    }
+
     const questions = jsonArray.map(item => {
       return {
         questionTitle: item.question,
@@ -120,7 +137,8 @@ app.use('/upload/sets', async (req, res, next) => {
     }
     return app._router.handle(req, res, next)
   } catch (error) {
-    return res.status(400).send('unknown happened')
+    console.log('error', error)
+    return res.status(400).send('unknown error happened')
   }
 })
 
