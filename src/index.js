@@ -60,7 +60,7 @@ app.use('/update/slugs', async (req, res) => {
     questions.forEach(async question => {
       if (!question.slug) {
         await question.update(
-          { slug: slugify(question.title) },
+          { slug: slugify(question.title, { lower: true }) },
           { upsert: true }
         )
       }
@@ -78,7 +78,7 @@ app.use('/update/short', async (req, res) => {
     sets.forEach(async set => {
       await set.update(
         {
-          slug: slugify(set.title),
+          slug: slugify(set.title, { lower: true }),
           shortCode: uid()
         },
         { upsert: true }

@@ -34,7 +34,7 @@ export default {
         custom,
         meta,
         questions: quizes,
-        slug: slugify(quizSetTitle),
+        slug: (quizSetTitle, { lower: true }),
         shortCode: uid()
       })
       const doc = await quizSet.save()

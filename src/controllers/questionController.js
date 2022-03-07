@@ -54,7 +54,7 @@ export default {
     const data = req.body
     data.author = author
     // append slug
-    data.slug = slugify(data.title)
+    data.slug = slugify(data.title, { lower: true })
 
     // validate subject
     const field = Field.findOne({ _id: data.subject_code })
