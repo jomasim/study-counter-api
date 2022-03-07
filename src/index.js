@@ -14,16 +14,21 @@ import admin from 'firebase-admin'
 import { getSecret } from './utils/gcp_secrets'
 import Question from './models/Question'
 import slugify from 'slugify'
+const fileUpload = require('express-fileupload')
 import quizSetRouter from './routes/quizSet'
 import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
-import downloadFile from './utils/downloadFile'
 
 const app = express()
 app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
-
+// enable files upload
+app.use(
+  fileUpload({
+    createParentPath: true
+  })
+)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
