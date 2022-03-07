@@ -2,10 +2,8 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
-const fileUpload = require('express-fileupload')
 const csv = require('csvtojson')
 import cloudinary from 'cloudinary'
-import validUrl from 'valid-url'
 import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
@@ -25,12 +23,25 @@ const app = express()
 app.use(morgan('dev'))
 app.use(cors())
 app.use(express.json())
-// enable files upload
-app.use(
-  fileUpload({
-    createParentPath: true
-  })
-)
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY
+})
+
+const bulkUploadImages = async jsonArray => {
+  for (let item of jsonArray) {
+    if (item.image) {
+      cloudinary.v2.api.resource(item.image, (error, result) => {
+        if (result) {
+          Object.assign(item, { ...item, image: result.secure_url })
+        }
+      })
+    }
+  }
+  return jsonArray
+}
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -100,23 +111,14 @@ app.use('/upload/sets', async (req, res, next) => {
     if (!req.files.file) {
       return res.status(400).send('File name with key file is missing')
     }
-    const jsonArray = await csv().fromString(
-      req.files.file.data.toString('utf8')
-    )
+    let jsonArray = await csv().fromString(req.files.file.data.toString('utf8'))
 
     const single = jsonArray[0]
     const quizSetTitle = single['title']
     const subject = single['subject']
     const meta = { category: single['category'] }
 
-    for (let item of jsonArray) {
-      if (validUrl.isUri(item.image)) {
-        const path = await downloadFile(item.image)
-        const data = await cloudinary.v2.uploader.upload(path)
-        Object.assign(item, { ...item, image: data.secure_url })
-        console.log('uploaded', item.image)
-      }
-    }
+    jsonArray = await bulkUploadImages(jsonArray)
 
     const questions = jsonArray.map(item => {
       return {
