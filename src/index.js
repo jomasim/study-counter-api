@@ -34,15 +34,26 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_SECRET_KEY
 })
+const getImage = image =>
+  new Promise((resolve, reject) => {
+    cloudinary.v2.api.resource(`flashcard/${image}`, (error, result) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(result)
+      }
+    })
+  })
 
 const bulkUploadImages = async jsonArray => {
   for (let item of jsonArray) {
     if (item.image) {
-      cloudinary.v2.api.resource(item.image, (error, result) => {
-        if (result) {
-          Object.assign(item, { ...item, image: result.secure_url })
-        }
-      })
+      try {
+        const data = await getImage(item.image)
+        Object.assign(item, { ...item, image: data.secure_url })
+      } catch (error) {
+        console.log('error fetching', error)
+      }
     }
   }
   return jsonArray
