@@ -65,6 +65,7 @@ export default {
       nextPage: page + 1,
       prevPage: page - 1 > 0 ? page - 1 : null,
       count: Math.ceil(total / limit),
+      total,
       quizSets
     }
     return res.status(200).json(quizSetsData)
