@@ -1,4 +1,5 @@
 import slugify from 'slugify'
+import ShortUniqueId from 'short-unique-id'
 import Field from '../models/Field'
 import Question from '../models/Question'
 
@@ -49,12 +50,22 @@ export default {
     const data = await Question.findOne({ slug }).populate('subject_code')
     return res.status(200).json(data)
   },
+  getByShortCode: async (req, res) => {
+    const { short_code } = req.params
+    const data = await Question.findOne({ shortCode: short_code }).populate(
+      'subject_code'
+    )
+    return res.status(200).json(data)
+  },
   add: (req, res) => {
     const author = res.locals.user.user_id
     const data = req.body
     data.author = author
+    const uid = new ShortUniqueId({ length: 10 })
     // append slug
     data.slug = slugify(data.title, { lower: true })
+    // append short code
+    data.shortCode = new uid()
 
     // validate subject
     const field = Field.findOne({ _id: data.subject_code })

@@ -70,7 +70,7 @@ app.use('/update/slugs', async (req, res) => {
   try {
     questions.forEach(async question => {
       if (!question.slug) {
-        await question.update(
+        await question.updateOne(
           { slug: slugify(question.title, { lower: true }) },
           { upsert: true }
         )
@@ -87,7 +87,7 @@ app.use('/update/short', async (req, res) => {
   const sets = await QuizSet.find({})
   try {
     sets.forEach(async set => {
-      await set.update(
+      await set.updateOne(
         {
           slug: slugify(set.title, { lower: true }),
           shortCode: uid()
@@ -96,6 +96,24 @@ app.use('/update/short', async (req, res) => {
       )
     })
     return res.send('success')
+  } catch (error) {
+    return res.send().json(error)
+  }
+})
+
+app.use('/update/questions/short', async (req, res) => {
+  const uid = new ShortUniqueId({ length: 10 })
+  const questions = await Question.find({})
+  try {
+    questions.forEach(async question => {
+      await question.updateOne(
+        {
+          shortCode: uid()
+        },
+        { upsert: true }
+      )
+    })
+    return res.send('sucesss')
   } catch (error) {
     return res.send().json(error)
   }
