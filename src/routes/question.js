@@ -9,12 +9,12 @@ questionRouter.get('/', (req, res) => questionController.list(req, res))
 questionRouter.get('/owner', firebaseMiddleware.auth, (req, res) =>
   questionController.listByAuthor(req, res)
 )
-// questionRouter.get('/:slug', (req, res) =>
-//   questionController.getBySlug(req, res)
-// )
-questionRouter.get('/:short_code', (req, res) =>
-  questionController.getByShortCode(req, res)
+questionRouter.get('/:slug', (req, res) =>
+  questionController.getBySlug(req, res)
 )
+// questionRouter.get('/:short_code', (req, res) =>
+//   questionController.getByShortCode(req, res)
+// )
 questionRouter.post(
   '/',
   firebaseMiddleware.auth,

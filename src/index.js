@@ -18,6 +18,7 @@ const fileUpload = require('express-fileupload')
 import quizSetRouter from './routes/quizSet'
 import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
+import generateUniqueId from 'generate-unique-id'
 
 const app = express()
 app.use(morgan('dev'))
@@ -66,12 +67,19 @@ cloudinary.config({
 })
 
 app.use('/update/slugs', async (req, res) => {
-  const questions = await Question.find({})
+  const questions = await Question.find({}, null, {
+    limit: 10000,
+    skip: 240000
+  })
   try {
     questions.forEach(async question => {
-      if (!question.slug) {
+      if (question.title) {
+        const slug =
+          slugify(question.title, { lower: true }) + '-' + generateUniqueId()
         await question.updateOne(
-          { slug: slugify(question.title, { lower: true }) },
+          {
+            slug
+          },
           { upsert: true }
         )
       }
@@ -103,8 +111,20 @@ app.use('/update/short', async (req, res) => {
 
 app.use('/update/questions/short', async (req, res) => {
   const uid = new ShortUniqueId({ length: 10 })
-  const questions = await Question.find({})
+  const questions = await Question.find({}, null, {
+    limit: 10000,
+    skip: 230000
+  })
   try {
+    let updateAllDocs = questions.map(({ _id }) => {
+      return {
+        updateOne: {
+          filter: { _id: _id },
+          update: { $set: { shortCode: uid() } }
+        }
+      }
+    })
+    await Question.bulkWrite(updateAllDocs)
     questions.forEach(async question => {
       await question.updateOne(
         {
@@ -113,9 +133,11 @@ app.use('/update/questions/short', async (req, res) => {
         { upsert: true }
       )
     })
-    return res.send('sucesss')
+    return res.status(200).send('success')
   } catch (error) {
-    return res.send().json(error)
+    console.log('error', error)
+    return 'error'
+    // return res.send().json(error)
   }
 })
 
