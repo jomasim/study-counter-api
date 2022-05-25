@@ -4,6 +4,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 const csv = require('csvtojson')
 import cloudinary from 'cloudinary'
+import cron from 'node-cron'
 import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
@@ -66,10 +67,38 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY
 })
 
+const task = cron.schedule('35 10 * * *', async () => {
+  let x = 0
+  while (x < 234000) {
+    const questions = await Question.find({}, null, {
+      limit: 1000,
+      skip: x
+    })
+    try {
+      questions.forEach(async question => {
+        if (question.title) {
+          const slug =
+            slugify(question.title, { lower: true }) + '-' + generateUniqueId()
+          await question.updateOne(
+            {
+              slug
+            },
+            { upsert: true }
+          )
+        }
+      })
+      x = x + 1000
+      console.log('running a task batch', x)
+    } catch (error) {
+      console.log('error', error)
+    }
+  }
+})
+
 app.use('/update/slugs', async (req, res) => {
   const questions = await Question.find({}, null, {
     limit: 10000,
-    skip: 240000
+    skip: 0
   })
   try {
     questions.forEach(async question => {
