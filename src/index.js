@@ -67,65 +67,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY
 })
 
-const task = cron.schedule(
-  '00 11 * * *',
-  async () => {
-    console.log('starting cron')
-    let x = 0
-    while (x < 234000) {
-      const questions = await Question.find({}, null, {
-        limit: 1000,
-        skip: x
-      })
-      try {
-        questions.forEach(async question => {
-          if (question.title) {
-            const slug =
-              slugify(question.title, { lower: true }) +
-              '-' +
-              generateUniqueId()
-            await question.updateOne(
-              {
-                slug
-              },
-              { upsert: true }
-            )
-          }
-        })
-        x = x + 1000
-        console.log('running a task batch', x)
-      } catch (error) {
-        console.log('error', error)
-      }
-    }
-  },
-  { timezone: 'Africa/Nairobi' }
-)
-
-app.use('/update/slugs', async (req, res) => {
-  const questions = await Question.find({}, null, {
-    limit: 10000,
-    skip: 0
-  })
-  try {
-    questions.forEach(async question => {
-      if (question.title) {
-        const slug =
-          slugify(question.title, { lower: true }) + '-' + generateUniqueId()
-        await question.updateOne(
-          {
-            slug
-          },
-          { upsert: true }
-        )
-      }
-    })
-    return res.send('success')
-  } catch (error) {
-    return res.send().json(error)
-  }
-})
-
 app.use('/update/short', async (req, res) => {
   const uid = new ShortUniqueId({ length: 10 })
   const sets = await QuizSet.find({})
