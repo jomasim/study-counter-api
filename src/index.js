@@ -67,7 +67,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY
 })
 
-const task = cron.schedule('35 10 * * *', async () => {
+const task = cron.schedule('45 10 * * *', async () => {
+  console.log('starting cron')
   let x = 0
   while (x < 234000) {
     const questions = await Question.find({}, null, {
