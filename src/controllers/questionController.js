@@ -1,5 +1,5 @@
 import slugify from 'slugify'
-import ShortUniqueId from 'short-unique-id'
+import generateUniqueId from 'generate-unique-id'
 import Field from '../models/Field'
 import Question from '../models/Question'
 
@@ -61,11 +61,8 @@ export default {
     const author = res.locals.user.user_id
     const data = req.body
     data.author = author
-    const uid = new ShortUniqueId({ length: 10 })
     // append slug
-    data.slug = slugify(data.title, { lower: true })
-    // append short code
-    data.shortCode = new uid()
+    data.slug = slugify(data.title, { lower: true }) + '-' + generateUniqueId()
 
     // validate subject
     const field = Field.findOne({ _id: data.subject_code })
@@ -78,9 +75,10 @@ export default {
     question
       .save(data)
       .then(doc => res.status(201).json(doc))
-      .catch(err =>
+      .catch(err => {
+        console.log('error', err)
         res.status(500).json({ message: 'Error occured while saving', err })
-      )
+      })
   },
   answer: async (req, res) => {
     const { id } = req.params

@@ -22,10 +22,6 @@ const questionSchema = new mongoose.Schema(
     paperInfo: {
       type: Object
     },
-    shortCode: {
-      type: String,
-      required: true
-    },
     subject_code: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Field'

@@ -4,7 +4,6 @@ import cors from 'cors'
 import morgan from 'morgan'
 const csv = require('csvtojson')
 import cloudinary from 'cloudinary'
-import cron from 'node-cron'
 import { connectDb } from '../src/models/index'
 
 import questionRouter from './routes/question'
@@ -19,7 +18,6 @@ const fileUpload = require('express-fileupload')
 import quizSetRouter from './routes/quizSet'
 import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
-import generateUniqueId from 'generate-unique-id'
 
 const app = express()
 app.use(morgan('dev'))
