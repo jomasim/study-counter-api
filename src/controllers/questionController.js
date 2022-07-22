@@ -2,6 +2,7 @@ import slugify from 'slugify'
 import generateUniqueId from 'generate-unique-id'
 import Field from '../models/Field'
 import Question from '../models/Question'
+import SendGrid from '../utils/SendGrid'
 
 export default {
   list: async (req, res) => {
@@ -57,10 +58,11 @@ export default {
     )
     return res.status(200).json(data)
   },
-  add: (req, res) => {
+  add: async (req, res) => {
     const author = res.locals.user.user_id
     const data = req.body
     data.author = author
+    const authorMail = res.locals.user.email
     // append slug
     data.slug = slugify(data.title, { lower: true }) + '-' + generateUniqueId()
 
@@ -74,7 +76,20 @@ export default {
     const question = new Question(data)
     question
       .save(data)
-      .then(doc => res.status(201).json(doc))
+      .then(async doc => {
+        // forward email to user
+        const mailData = {
+          from: 'support@studycounter.com',
+          to: authorMail,
+          subject: 'New order success',
+          text: 'Hello you got your first order!',
+          html: '<b>Hi, new Order created! </b>'
+        }
+
+        await SendGrid.send(mailData)
+
+        return res.status(201).json(doc)
+      })
       .catch(err => {
         console.log('error', err)
         res.status(500).json({ message: 'Error occured while saving', err })
