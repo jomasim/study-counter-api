@@ -1,4 +1,7 @@
 import slugify from 'slugify'
+import _ from 'lodash'
+import fs from 'fs'
+import path from 'path'
 import generateUniqueId from 'generate-unique-id'
 import Field from '../models/Field'
 import Question from '../models/Question'
@@ -77,13 +80,27 @@ export default {
     question
       .save(data)
       .then(async doc => {
+        const targetPath = path.resolve(
+          __dirname,
+          '../email_templates/order_placed.html'
+        )
+        const targetEmail = fs.readFileSync(targetPath, 'utf8')
+
+        const emailTemplate = _.template(targetEmail)
+
+        const html = emailTemplate({
+          QUESTION_LINK: `https://studycounter.com/questions/${doc.slug}`,
+          QUESTION_TITLE: doc.title
+        })
+
+
         // forward email to user
         const mailData = {
           from: 'support@studycounter.com',
           to: authorMail,
-          subject: 'New order success',
+          subject: 'Your question has been Posted!',
           text: 'Hello you got your first order!',
-          html: '<b>Hi, new Order created! </b>'
+          html
         }
 
         await SendGrid.send(mailData)
