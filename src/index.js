@@ -18,6 +18,7 @@ const fileUpload = require('express-fileupload')
 import quizSetRouter from './routes/quizSet'
 import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
+import bidRouter from './routes/bid'
 
 const app = express()
 app.use(morgan('dev'))
@@ -179,6 +180,7 @@ app.use('/api/v1/quizset', quizSetRouter)
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/field', fieldRouter)
+app.use('/api/v1/bid', bidRouter)
 
 connectDb().then(async () => {
   let params

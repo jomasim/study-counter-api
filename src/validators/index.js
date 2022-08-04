@@ -97,6 +97,11 @@ const schemas = {
       })
       .min(1)
       .required()
+  }),
+  bidSchema: Joi.object().keys({
+    message: Joi.string(),
+    amount: Joi.number().required(),
+    question: Joi.string()
   })
 }
 
@@ -121,6 +126,12 @@ export default {
   },
   answer: (req, res, next) => {
     const { error } = schemas.answerSchema.validate(req.body)
+    if (error)
+      return res.status(400).json({ message: error.details[0].message })
+    next()
+  },
+  bid: (req, res, next) => {
+    const { error } = schemas.bidSchema.validate(req.body)
     if (error)
       return res.status(400).json({ message: error.details[0].message })
     next()
