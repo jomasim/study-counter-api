@@ -21,5 +21,17 @@ export default {
     const { question_id } = req.params
     const bids = await Bid.find({ question: question_id })
     return res.status(200).json(bids)
+  },
+  bidByUser: async (req, res) => {
+    const user = res.locals.user.user_id
+    try {
+      const bid = await Bid.findOne({ id: user })
+      if (!bid) {
+        res.status(404).send('No bid found')
+      }
+      return res.status(200).json(bid)
+    } catch (error) {
+      res.status(400).send(error)
+    }
   }
 }

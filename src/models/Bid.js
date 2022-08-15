@@ -10,6 +10,10 @@ const bidSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    status: {
+      type: String,
+      default: 'PENDING'
+    },
     user: {
       type: String,
       required: true
