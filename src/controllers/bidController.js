@@ -25,7 +25,7 @@ export default {
   bidByUser: async (req, res) => {
     const user = res.locals.user.user_id
     try {
-      const bid = await Bid.findOne({ id: user })
+      const bid = await Bid.findOne({ user })
       if (!bid) {
         res.status(404).send('No bid found')
       }
