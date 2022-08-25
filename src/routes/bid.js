@@ -9,7 +9,7 @@ bidRouter.get('/', (req, res) => bidController.list(req, res))
 bidRouter.get('/question/:question_id', (req, res) =>
   bidController.listByQuestion(req, res)
 )
-bidRouter.get('/user', firebaseMiddleware.auth, (req, res) =>
+bidRouter.get('/user/:question_id', firebaseMiddleware.auth, (req, res) =>
   bidController.bidByUser(req, res)
 )
 bidRouter.post('/', firebaseMiddleware.auth, validate.bid, (req, res) =>
