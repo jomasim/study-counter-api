@@ -7,16 +7,20 @@ const userSchema = new mongoose.Schema(
       required: true
     },
     username: {
-      type: String
+      type: String,
+      default: null
     },
     profileImage: {
-      type: String
+      type: String,
+      default: null
     },
     aboutMe: {
-      type: String
+      type: String,
+      default: null
     },
     profession: {
-      type: String
+      type: String,
+      default: null
     },
     subjects: {
       type: Array,
@@ -26,16 +30,20 @@ const userSchema = new mongoose.Schema(
       type: String
     },
     emailVerified: {
-      type: Boolean
+      type: Boolean,
+      default: false
     },
     status: {
-      type: String
+      type: String,
+      default: null
     },
     address: {
-      type: String
+      type: String,
+      default: null
     },
     phone: {
-      type: String
+      type: String,
+      default: null
     }
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }

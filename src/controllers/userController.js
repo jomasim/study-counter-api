@@ -8,7 +8,6 @@ export default {
         password,
         email
       })
-      console.log("user", user)
       const { uid } = user
       await admin.auth().setCustomUserClaims(uid, { role })
       const userProfile = new User({
@@ -19,7 +18,16 @@ export default {
       await userProfile.save()
       return res.status(201).send({ user: userProfile })
     } catch (err) {
-      return res.status(500).send(err)
+      return res.status(400).send(err)
+    }
+  },
+  getUserProfile: async (req, res) => {
+    const email = res.locals.user.email
+    try {
+      const profile = await User.findOne({ email })
+      res.status(200).send(profile)
+    } catch (error) {
+      res.status(400).json(error)
     }
   }
 }
