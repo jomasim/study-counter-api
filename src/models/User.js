@@ -6,7 +6,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    username: {
+    firstName: {
+      type: String,
+      default: null
+    },
+    lastName: {
       type: String,
       default: null
     },
@@ -16,6 +20,14 @@ const userSchema = new mongoose.Schema(
     },
     aboutMe: {
       type: String,
+      default: null
+    },
+    country: {
+      type: Object,
+      default: null
+    },
+    timeZone: {
+      type: Object,
       default: null
     },
     profession: {

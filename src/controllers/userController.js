@@ -29,5 +29,22 @@ export default {
     } catch (error) {
       res.status(400).json(error)
     }
+  },
+  updateUserProfile: async (req, res) => {
+    const email = res.locals.user.email
+    try {
+      const profile = await User.findOne({ email })
+      if (!profile) {
+        return res.status(400).send({ message: 'User with profile not found!' })
+      }
+      User.findOneAndUpdate({ _id: profile._id }, req.body, (err, data) => {
+        if (err) {
+          return res.status(400).send(err)
+        }
+        return res.status(200).send(data)
+      })
+    } catch (error) {
+      res.status(400).send(error)
+    }
   }
 }
