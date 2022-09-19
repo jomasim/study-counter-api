@@ -16,6 +16,11 @@ export default {
         memberType: role
       })
       await userProfile.save()
+      const current_year = new Date().getFullYear()
+      const prefix = String(userProfile._id).slice(0, 7)
+      const externalId = `${prefix}-${current_year}`
+      // update external id as first 6 chars of id and year
+      await User.updateOne({ _id: userProfile._id }, { $set: { externalId } })
       return res.status(201).send({ user: userProfile })
     } catch (err) {
       return res.status(400).send(err)
