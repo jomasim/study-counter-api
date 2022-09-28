@@ -19,7 +19,7 @@ export default {
   },
   listByQuestion: async (req, res) => {
     const { question_id } = req.params
-    const bids = await Bid.find({ question: question_id })
+    const bids = await Bid.find({ question: question_id, status: 'PENDING' })
     return res.status(200).json(bids)
   },
   acceptBid: async (req, res) => {
@@ -31,7 +31,6 @@ export default {
         { upsert: true },
         (err, data) => {
           if (err) {
-            console.log('home', err)
             return res.status(400).send(err)
           }
           return res.status(200).send(data)
