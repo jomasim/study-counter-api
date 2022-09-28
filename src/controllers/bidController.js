@@ -22,6 +22,25 @@ export default {
     const bids = await Bid.find({ question: question_id })
     return res.status(200).json(bids)
   },
+  acceptBid: async (req, res) => {
+    const { id } = req.params
+    try {
+      Bid.findOneAndUpdate(
+        { _id: id },
+        { status: 'ACCEPTED' },
+        { upsert: true },
+        (err, data) => {
+          if (err) {
+            console.log('home', err)
+            return res.status(400).send(err)
+          }
+          return res.status(200).send(data)
+        }
+      )
+    } catch (error) {
+      return res.status(400).send(error)
+    }
+  },
   bidByUser: async (req, res) => {
     const { question_id } = req.params
     const user = res.locals.user.user_id

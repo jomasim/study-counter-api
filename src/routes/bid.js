@@ -12,7 +12,10 @@ bidRouter.get('/question/:question_id', (req, res) =>
 bidRouter.get('/user/:question_id', firebaseMiddleware.auth, (req, res) =>
   bidController.bidByUser(req, res)
 )
-bidRouter.post('/', firebaseMiddleware.auth, validate.bid, (req, res) =>
+bidRouter.post('/update/:id', firebaseMiddleware.auth, (req, res) =>
+  bidController.acceptBid(req, res)
+)
+bidRouter.post('/create', firebaseMiddleware.auth, validate.bid, (req, res) =>
   bidController.add(req, res)
 )
 
