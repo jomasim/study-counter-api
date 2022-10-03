@@ -1,4 +1,5 @@
 import Bid from '../models/Bid'
+import Question from '../models/Question'
 
 export default {
   add: (req, res) => {
@@ -19,7 +20,7 @@ export default {
   },
   listByQuestion: async (req, res) => {
     const { question_id } = req.params
-    const bids = await Bid.find({ question: question_id, status: 'PENDING' })
+    const bids = await Bid.find({ question: question_id })
     return res.status(200).json(bids)
   },
   acceptBid: async (req, res) => {
@@ -33,7 +34,18 @@ export default {
           if (err) {
             return res.status(400).send(err)
           }
-          return res.status(200).send(data)
+          // update question status
+          Question.findOneAndUpdate(
+            { _id: data.question },
+            { status: 'IN_PROGRESS' },
+            { upsert: true },
+            (err, _) => {
+              if (err) {
+                return res.status(400).send(err)
+              }
+              return res.status(200).send(data)
+            }
+          )
         }
       )
     } catch (error) {

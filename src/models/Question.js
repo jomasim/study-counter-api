@@ -47,7 +47,7 @@ const questionSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: 'available'
+      default: 'AVAILABLE'
     },
     answers: {
       type: Array,

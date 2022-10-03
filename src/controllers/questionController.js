@@ -6,6 +6,7 @@ import generateUniqueId from 'generate-unique-id'
 import Field from '../models/Field'
 import Question from '../models/Question'
 import SendGrid from '../utils/SendGrid'
+import Bid from '../models/Bid'
 
 export default {
   list: async (req, res) => {
@@ -25,6 +26,32 @@ export default {
       questions
     }
     return res.status(200).json(questionData)
+  },
+  availableQuestions: async (req, res) => {
+    try {
+      const { limit = 10, page = 1 } = req.query
+      const total = (await Question.countDocuments()) || 0
+      const questions = await Question.find(
+        { $or: [{ status: 'available' }, { status: 'AVAILABLE' }] },
+        null,
+        {
+          sort: { created_at: -1 },
+          limit: parseInt(limit),
+          skip: (parseInt(page) - 1) * parseInt(limit)
+        }
+      ).populate('subject_code')
+
+      const questionData = {
+        page,
+        nextPage: page + 1,
+        prevPage: page - 1 > 0 ? page - 1 : null,
+        count: Math.ceil(total / limit),
+        questions
+      }
+      return res.status(200).json(questionData)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
   },
   listByAuthor: async (req, res) => {
     const { limit = 10, page = 1 } = req.query
@@ -92,7 +119,6 @@ export default {
           QUESTION_LINK: `https://studycounter.com/questions/${doc.slug}`,
           QUESTION_TITLE: doc.title
         })
-
 
         // forward email to user
         const mailData = {
