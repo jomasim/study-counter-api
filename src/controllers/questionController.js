@@ -6,7 +6,6 @@ import generateUniqueId from 'generate-unique-id'
 import Field from '../models/Field'
 import Question from '../models/Question'
 import SendGrid from '../utils/SendGrid'
-import Bid from '../models/Bid'
 
 export default {
   list: async (req, res) => {

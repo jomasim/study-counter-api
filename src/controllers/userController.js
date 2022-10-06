@@ -8,12 +8,14 @@ export default {
         password,
         email
       })
-      const { uid } = user
+      // firebase user uid
+      const { uid } = user 
       await admin.auth().setCustomUserClaims(uid, { role })
       const userProfile = new User({
         email: user.email,
         emailVerified: user.emailVerified,
-        memberType: role
+        memberType: role,
+        fuid: uid
       })
       await userProfile.save()
       const current_year = new Date().getFullYear()

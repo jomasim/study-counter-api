@@ -6,7 +6,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    fuid: {
+      type: String,
+      default: null
+    },
     externalId: {
+      type: String,
+      default: null
+    },
+    username: {
       type: String,
       default: null
     },

@@ -12,6 +12,15 @@ bidRouter.get('/question/:question_id', (req, res) =>
 bidRouter.get('/user/:question_id', firebaseMiddleware.auth, (req, res) =>
   bidController.bidByUser(req, res)
 )
+bidRouter.get('/tutor/in-progress', firebaseMiddleware.auth, (req, res) =>
+  bidController.getTutorInProgress(req, res)
+)
+bidRouter.get('/tutor/completed', firebaseMiddleware.auth, (req, res) =>
+  bidController.getTutorCompleted(req, res)
+)
+bidRouter.get('/tutor/stats', firebaseMiddleware.auth, (req, res) =>
+  bidController.getTutorStats(req, res)
+)
 bidRouter.post('/update/:id', firebaseMiddleware.auth, (req, res) =>
   bidController.acceptBid(req, res)
 )
