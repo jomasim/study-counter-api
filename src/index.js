@@ -19,6 +19,7 @@ import quizSetRouter from './routes/quizSet'
 import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
 import bidRouter from './routes/bid'
+import FileRouter from './routes/file'
 
 const app = express()
 app.use(morgan('dev'))
@@ -176,11 +177,52 @@ app.use('/upload/sets', async (req, res, next) => {
   }
 })
 
+app.use('/v2/upload/sets', async (req, res) => {
+  try {
+    if (!req.files) {
+      return res.status(400).send('No file uploaded')
+    }
+    if (!req.files.file) {
+      return res.status(400).send('File name with key file is missing')
+    }
+
+    let jsonArray = await csv().fromString(req.files.file.data.toString('utf8'))
+
+    const result = jsonArray.reduce((acc, item) => {
+      let title = item['title']
+      acc[title] = acc[title] || []
+      item['meta'] = item['category']
+      delete item['category']
+      delete item['title']
+      acc[title].push(item)
+      return acc
+    }, Object.create(null))
+
+    result.forEach(set => {
+      req.url = '/api/v1/quizset'
+      req.method = 'post'
+      req.body = {
+        quizSetTitle,
+        subject,
+        meta,
+        custom: true,
+        questions
+      }
+      app._router.handle(req, res, next)
+    })
+    res.send(result)
+  } catch (error) {
+    console.log('error', error)
+    return res.status(400).send('unknown error happened')
+  }
+})
+
 app.use('/api/v1/quizset', quizSetRouter)
 app.use('/api/v1/question', questionRouter)
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/field', fieldRouter)
 app.use('/api/v1/bid', bidRouter)
+app.use('/api/v1/file', FileRouter)
 
 connectDb().then(async () => {
   let params

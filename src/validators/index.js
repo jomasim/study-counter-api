@@ -102,6 +102,13 @@ const schemas = {
     message: Joi.string(),
     amount: Joi.number().required(),
     question: Joi.string()
+  }),
+  fileSchema: Joi.object().keys({
+    title: Joi.string(),
+    subject_code: Joi.number().required(),
+    course_code: Joi.string().required(),
+    url: Joi.string().required(),
+    metaInfo: Joi.object()
   })
 }
 
@@ -132,6 +139,12 @@ export default {
   },
   bid: (req, res, next) => {
     const { error } = schemas.bidSchema.validate(req.body)
+    if (error)
+      return res.status(400).json({ message: error.details[0].message })
+    next()
+  },
+  file: (req, res, next) => {
+    const { error } = schemas.fileSchema.validate(req.body)
     if (error)
       return res.status(400).json({ message: error.details[0].message })
     next()
