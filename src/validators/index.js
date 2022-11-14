@@ -105,7 +105,7 @@ const schemas = {
   }),
   fileSchema: Joi.object().keys({
     title: Joi.string(),
-    subject_code: Joi.number().required(),
+    subject_code: Joi.string().required(),
     course_code: Joi.string().required(),
     url: Joi.string().required(),
     metaInfo: Joi.object()

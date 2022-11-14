@@ -12,6 +12,7 @@ FileRouter.get('/owner', firebaseMiddleware.auth, (req, res) =>
 FileRouter.get('/stats', firebaseMiddleware.auth, (req, res) =>
   FileController.userFileStats(req, res)
 )
+FileRouter.get('/recent', (req, res) => FileController.recent(req, res))
 FileRouter.post('/create', firebaseMiddleware.auth, validate.file, (req, res) =>
   FileController.add(req, res)
 )

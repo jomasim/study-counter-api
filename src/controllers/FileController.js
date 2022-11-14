@@ -1,4 +1,3 @@
-import file from '@babel/core/lib/transformation/file/file'
 import File from '../models/File'
 
 export default {
@@ -13,6 +12,17 @@ export default {
       .catch(err =>
         res.status(500).json({ message: 'Error occured while saving', err })
       )
+  },
+  recent: async (req, res) => {
+    try {
+      const files = await File.find({}, null, {
+        sort: { created_at: -1 },
+        limit: 4
+      })
+      return res.status(200).json(files)
+    } catch (error) {
+      return res.status(500).json({ message: 'Error fetching  files', error })
+    }
   },
   list: async (req, res) => {
     try {
