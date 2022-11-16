@@ -43,6 +43,17 @@ export default {
         .json({ message: 'Error fetching user files', error })
     }
   },
+  getById: async (req, res) => {
+    try {
+      const { id } = req.params
+      const file = await File.findOne({ _id: id })
+      return res.status(200).json(file)
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: 'Error fetching user files', error })
+    }
+  },
   userFileStats: async (req, res) => {
     try {
       const owner = res.locals.user.user_id

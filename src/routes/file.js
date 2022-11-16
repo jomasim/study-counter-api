@@ -16,5 +16,6 @@ FileRouter.get('/recent', (req, res) => FileController.recent(req, res))
 FileRouter.post('/create', firebaseMiddleware.auth, validate.file, (req, res) =>
   FileController.add(req, res)
 )
+FileRouter.get('/:id', (req, res) => FileController.getById(req, res))
 
 export default FileRouter
