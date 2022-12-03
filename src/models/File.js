@@ -22,6 +22,9 @@ const FileSchema = new mongoose.Schema(
       type: Object,
       default: {}
     },
+    instructions: {
+      type: String
+    },
     owner: {
       type: String,
       required: true
