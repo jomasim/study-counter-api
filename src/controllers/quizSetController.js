@@ -50,6 +50,16 @@ export default {
       .populate('questions')
     return res.status(200).json(data)
   },
+  getQuizSetSlugs: async (req, res) => {
+    try {
+      const data = await QuizSet.find({}).select('slug')
+      return res.status(200).json(data)
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: 'Error occured while fetching records', err })
+    }
+  },
   list: async (req, res) => {
     const { limit = 10, page = 1 } = req.query
     const total = (await QuizSet.countDocuments()) || 0
