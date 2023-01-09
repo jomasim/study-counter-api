@@ -80,6 +80,17 @@ export default {
     const data = await Question.findOne({ slug }).populate('subject_code')
     return res.status(200).json(data)
   },
+  getQuestionSlugs: async (req, res) => {
+    console.log('welcome here')
+    try {
+      const data = await Question.find({}).select('slug');
+      return res.status(200).json(data)
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: 'Error occured while fetching records', err })
+    }
+  },
   getByShortCode: async (req, res) => {
     const { short_code } = req.params
     const data = await Question.findOne({ shortCode: short_code }).populate(

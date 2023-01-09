@@ -5,6 +5,9 @@ var firebaseMiddleware = require('express-firebase-middleware')
 
 const questionRouter = express.Router()
 
+questionRouter.get('/slugs', (req, res) =>
+  questionController.getQuestionSlugs(req, res)
+)
 questionRouter.get('/', (req, res) => questionController.list(req, res))
 questionRouter.get('/available', (req, res) =>
   questionController.availableQuestions(req, res)
