@@ -17,11 +17,12 @@ export default {
       skip: (parseInt(page) - 1) * parseInt(limit)
     }).populate('subject_code')
 
+    const currentPage = Number(page)
     const questionData = {
-      page,
-      nextPage: page + 1,
-      prevPage: page - 1 > 0 ? page - 1 : null,
-      count: Math.ceil(total / limit),
+      page: currentPage,
+      nextPage: currentPage + 1,
+      prevPage: currentPage - 1 > 0 ? currentPage - 1 : null,
+      count: Math.ceil(total / Number(limit)),
       questions
     }
     return res.status(200).json(questionData)
@@ -29,7 +30,10 @@ export default {
   availableQuestions: async (req, res) => {
     try {
       const { limit = 10, page = 1 } = req.query
-      const total = (await Question.countDocuments()) || 0
+      const total =
+        (await Question.countDocuments({
+          $or: [{ status: 'available' }, { status: 'AVAILABLE' }]
+        })) || 0
       const questions = await Question.find(
         { $or: [{ status: 'available' }, { status: 'AVAILABLE' }] },
         null,
@@ -40,11 +44,12 @@ export default {
         }
       ).populate('subject_code')
 
+      const currentPage = Number(page)
       const questionData = {
-        page,
-        nextPage: page + 1,
-        prevPage: page - 1 > 0 ? page - 1 : null,
-        count: Math.ceil(total / limit),
+        page: currentPage,
+        nextPage: currentPage + 1,
+        prevPage: currentPage - 1 > 0 ? currentPage - 1 : null,
+        count: Math.ceil(total / Number(limit)),
         questions
       }
       return res.status(200).json(questionData)
@@ -67,11 +72,12 @@ export default {
         .equals(author)
         .populate('subject_code')
     }
+    const currentPage = Number(page)
     return res.status(200).json({
-      page,
-      nextPage: page + 1,
-      prevPage: page - 1 > 0 ? page - 1 : null,
-      count: Math.ceil(total / limit),
+      page:currentPage,
+      nextPage: currentPage + 1,
+      prevPage: currentPage - 1 > 0 ? currentPage - 1 : null,
+      count: Math.ceil(total / Number(limit)),
       questions
     })
   },
@@ -81,9 +87,8 @@ export default {
     return res.status(200).json(data)
   },
   getQuestionSlugs: async (req, res) => {
-    console.log('welcome here')
     try {
-      const data = await Question.find({}).select('slug');
+      const data = await Question.find({}).select('slug')
       return res.status(200).json(data)
     } catch (error) {
       res
