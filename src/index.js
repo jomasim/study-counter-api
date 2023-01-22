@@ -20,6 +20,7 @@ import QuizSet from './models/QuizSet'
 import ShortUniqueId from 'short-unique-id'
 import bidRouter from './routes/bid'
 import FileRouter from './routes/file'
+import postRouter from './routes/post'
 
 const app = express()
 app.use(morgan('dev'))
@@ -223,6 +224,7 @@ app.use('/api/v1/user', userRouter)
 app.use('/api/v1/field', fieldRouter)
 app.use('/api/v1/bid', bidRouter)
 app.use('/api/v1/file', FileRouter)
+app.use('/api/v1/posts', postRouter)
 
 connectDb().then(async () => {
   let params

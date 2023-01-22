@@ -86,6 +86,11 @@ const schemas = {
     url: Joi.string().required(),
     metaInfo: Joi.object(),
     instructions: Joi.string()
+  }),
+  postSchema: Joi.object().keys({
+    title: Joi.string(),
+    content: Joi.string(),
+    tags: Joi.array()
   })
 }
 
@@ -122,6 +127,12 @@ export default {
   },
   file: (req, res, next) => {
     const { error } = schemas.fileSchema.validate(req.body)
+    if (error)
+      return res.status(400).json({ message: error.details[0].message })
+    next()
+  },
+  post: (req, res, next) => {
+    const { error } = schemas.postSchema.validate(req.body)
     if (error)
       return res.status(400).json({ message: error.details[0].message })
     next()
